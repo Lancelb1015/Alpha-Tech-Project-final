@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="dashboars.css">
+  <title>Shop Online | AlphaTech</title>
+  <link rel="icon" type="image/png" href="logo.png"/>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">ALPHA TECH</div>
+  <nav>
+    <a href="dashboard.html">Home</a>
+    <a href="#">Contact</a>
+    <a href="#">About</a>
+  </nav>
+  <input type="text" placeholder="What are you looking for?">
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <h1>ALPHA TECH</h1>
+    <p>
+      Discover premium computer hardware from top brands,
+      from processors to graphic card, we have everything
+      here you need to build a perfect system.
+    </p>
+    <button class="btn-primary">Shop now</button>
+  </div>
+  <div class="hero-image">
+    <img src="RAm.jpg" alt="RAM">
+  </div>
+</section>
+
+<section class="categories">
+  <h2>Shop by category</h2>
+  <p>Find exactly what you need. Browse our extensive selection of computer
+  hardware organized by component type.</p>
+  <div class="category-grid">
+    <a href="dashboard.html"><div class="card">Home</div></a>
+    <a href="server.html"><div class="card">Server</div></a>
+    <a href="Workstation.html"><div class="card">Workstation</div></a>
+    <a href="Router.html"><div class="card">Router</div></a>
+    <a href="switch.html"><div class="card">Switches</div></a>
+  </div>
+</section>
+
+<section class="products">
+  <div class="products-header">
+    <h2>Best Selling Products</h2>
+    <button class="view-all">
+      <a href="cart.html">View Cart</a>
+      <span id="cart-badge" class="cart-badge" style="display:none;">0</span>
+    </button>
+  </div>
+
+  <div class="product-grid">
+
+    <div class="product-card">
+      <img src="wT.jpg" alt="">
+      <h4>IPS LCD Gaming Monitor</h4>
+      <p class="price">₱ 75,000</p>
+      <button class="my-button"
+        data-id="3"
+        data-name="IPS LCD Gaming Monitor"
+        data-sku="MON-IPS-GAMING"
+        data-price="75000"
+        onclick="addToCart(this)">Add to Cart</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- Toast notification -->
+<div id="toast" style="
+  display:none;
+  position:fixed;
+  bottom:30px;
+  right:30px;
+  background:#222;
+  color:#fff;
+  padding:14px 22px;
+  border-radius:8px;
+  font-size:14px;
+  z-index:9999;
+  box-shadow:0 4px 16px rgba(0,0,0,0.3);
+"></div>
+
+<script>
+  /* ── Helpers ── */
+  function getCart() {
+    return JSON.parse(localStorage.getItem("alphatech_cart") || "[]");
+  }
+  function saveCart(cart) {
+    localStorage.setItem("alphatech_cart", JSON.stringify(cart));
+  }
+
+  /* ── Add to Cart ── */
+  function addToCart(btn) {
+    const id    = parseInt(btn.dataset.id);
+    const name  = btn.dataset.name;
+    const sku   = btn.dataset.sku;
+    const price = parseInt(btn.dataset.price);
+
+    let cart = getCart();
+    const existing = cart.find(i => i.id === id);
+
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ id, name, sku, price, qty: 1 });
+    }
+
+    saveCart(cart);
+    updateBadge();
+    showToast(`"${name}" added to cart!`);
+  }
+
+  /* ── Badge ── */
+  function updateBadge() {
+    const cart  = getCart();
+    const total = cart.reduce((s, i) => s + i.qty, 0);
+    const badge = document.getElementById("cart-badge");
+    badge.textContent  = total;
+    badge.style.display = total > 0 ? "inline-block" : "none";
+  }
+
+  /* ── Toast ── */
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent  = msg;
+    toast.style.display = "block";
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => { toast.style.display = "none"; }, 2500);
+  }
+
+  /* ── Init ── */
+  updateBadge();
+</script>
+
+</body>
+</html>
